@@ -1,0 +1,22 @@
+name: Release
+
+on:
+  pull_request:
+    types: [ closed ]
+    branches:
+      - master
+      - test
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      
+    - name: Release new chart versions
+      uses: ./.github/actions/release-helm
+      with:
+        releaseMessage: ${{ github.event.head_commit.message }}
+        branch: ${{ github.base_ref }}
