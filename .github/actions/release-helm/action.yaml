@@ -1,0 +1,47 @@
+name: Release helm packages
+description: Performs a check to confirm that no previous versions were mutated (optionally followed up by a release to the `releaseBranch`)
+inputs:
+  branch:
+    description: "Branch on which to run the helm package command"
+    required: false
+  releaseMessage:
+    description: "Message to include in a release commit"
+    required: false
+  releaseBranch:
+    description: "Branch used for released helm charts"
+    required: false
+    default: releases
+runs:
+  using: composite
+  steps:
+  - name: Checkout current branch
+    uses: actions/checkout@v3
+    with:
+      ref: ${{ inputs.branch }}
+      path: current-branch
+
+  - name: Checkout releases
+    uses: actions/checkout@v3
+    with:
+      ref: ${{ inputs.releaseBranch }}
+      path: ${{ inputs.releaseBranch }}
+
+  - name: Helm package pds-target
+    shell: bash
+    run: |
+      CHART_PATH="current-branch/pds-temporal"
+      cd ${{ inputs.releaseBranch }}
+      helm package ../${CHART_PATH}
+
+  - name: Update helm index
+    shell: bash
+    run: |
+      cd ${{ inputs.releaseBranch }}
+      helm repo index .
+
+  - name: Commit and Push
+    uses: EndBug/add-and-commit@v9
+    with:
+      message: ${{ inputs.releaseMessage }}
+      cwd: ./${{ inputs.releaseBranch }}
+      default_author: github_actions
