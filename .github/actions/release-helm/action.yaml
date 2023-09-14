@@ -29,7 +29,7 @@ runs:
   - name: Helm package pds-target
     shell: bash
     run: |
-      CHART_PATH="current-branch/pds-temporal"
+      CHART_PATH="current-branch/pds-temporal-charts"
       cd ${{ inputs.releaseBranch }}
       helm package ../${CHART_PATH}
 
