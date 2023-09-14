@@ -3,7 +3,29 @@ entries:
   pds-temporal:
   - apiVersion: v2
     appVersion: 1.22.0
-    created: "2023-09-14T20:46:46.395788+05:30"
+    created: "2023-09-14T16:36:25.37468409Z"
+    description: Temporal is a distributed, scalable, durable, and highly available
+      orchestration engine to execute asynchronous long-running business logic in
+      a scalable and resilient way.
+    digest: 266f63d32074bb38acc84422103230620c995192d28f228d2b5b4605702884a0
+    home: https://temporal.io/
+    keywords:
+    - temporal
+    - workflow
+    - orchestration
+    maintainers:
+    - name: Temporal Technologies Inc.
+      url: https://temporal.io/
+    name: pds-temporal
+    sources:
+    - https://github.com/temporalio/temporal
+    type: application
+    urls:
+    - pds-temporal-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.22.0
+    created: "2023-09-14T16:36:25.372101991Z"
     description: Temporal is a distributed, scalable, durable, and highly available
       orchestration engine to execute asynchronous long-running business logic in
       a scalable and resilient way.
@@ -21,6 +43,6 @@ entries:
     - https://github.com/temporalio/temporal
     type: application
     urls:
-    - https://portworx.github.io/pds-temporal/pds-temporal-0.1.0.tgz
+    - pds-temporal-0.1.0.tgz
     version: 0.1.0
-generated: "2023-09-14T20:46:46.393559+05:30"
+generated: "2023-09-14T16:36:25.369255872Z"
