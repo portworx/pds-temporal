@@ -1,0 +1,40 @@
+# Base image
+FROM --platform=linux/amd64 alpine:latest
+
+# Install Go using the package manager
+RUN apk add --no-cache go
+
+# Install required tools
+RUN apk --no-cache add git make
+
+# Set the Go environment variables
+ENV GOPATH /home/temporal/go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+
+# Set environment variables
+ENV TEMPORAL_REPO_URL=https://github.com/temporalio/temporal.git
+ENV BINARY_NAME=temporal-sql-tool
+
+# Clone the GitHub repository
+RUN git clone $TEMPORAL_REPO_URL /home/temporal
+
+# Set working directory
+WORKDIR /home/temporal
+
+# Build the binary using make
+RUN make $BINARY_NAME
+
+# Setup DB params
+ENV SQL_PLUGIN=postgres
+ENV SQL_HOST=postgresql_host
+ENV SQL_PORT=5432
+ENV SQL_USER=pds
+ENV SQL_PASSWORD=password
+
+# Run additional commands
+CMD ./$BINARY_NAME --database temporal create-database \
+    && SQL_DATABASE=temporal ./$BINARY_NAME setup-schema -v 0.0 \
+    && SQL_DATABASE=temporal ./$BINARY_NAME update -schema-dir schema/postgresql/v96/temporal/versioned \
+    && ./$BINARY_NAME --database temporal_visibility create-database \
+    && SQL_DATABASE=temporal_visibility ./$BINARY_NAME setup-schema -v 0.0 \
+    && SQL_DATABASE=temporal_visibility ./$BINARY_NAME update -schema-dir schema/postgresql/v96/visibility/versioned
